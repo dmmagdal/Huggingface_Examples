@@ -108,7 +108,7 @@ def main():
 
 	# First, let's define the model.
 	model = AutoModelForSequenceClassification.from_pretrained(
-		"bert-base-cased"
+		"bert-base-cased", cache_dir="."
 	)
 
 	# This will issue a warning about some of the pre=trained weights
@@ -280,7 +280,7 @@ def main():
 
 	# Define the model.
 	model = AutoModelForSequenceClassification.from_pretrained(
-		"bert-base-cased", num_labels=2
+		"bert-base-cased", num_labels=2, cache_dir="."
 	)
 
 	# Almost ready to write the training loop, the only two things that
