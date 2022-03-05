@@ -4,11 +4,15 @@ Description: Some example programs that use Huggingface datasets, transformers, 
 
 
 ### Fine-tuning GPT-2 for Magic the Gathering
-Status: Complete (Validating)
+Status: Complete (Validated)
 
 
 ### Fine-tuning BERT on IMDB
 Status: Complete (Validating)
+
+
+### Huggingface with Tensorflow 2.0
+Status: WIP
 
 
 Additional Sources:
