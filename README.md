@@ -12,7 +12,7 @@ Status: Complete (Validating)
 
 
 ### Huggingface with Tensorflow 2.0
-Status: WIP
+Status: Complete (Validated)
 
 
 Additional Sources:
