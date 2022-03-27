@@ -33,6 +33,17 @@ def main():
 	training_data = stories[:train_split]
 	val_split = len(stories) - train_split
 	validation_data = stories[-val_split:]
+	train_dataset = Dataset.from_dict({"contents": training_data})
+	valid_dataset = Dataset.from_dict({"contents": validation_data})
+	raw_datasets = DatasetDict(
+		{
+			"train": train_dataset,
+			"valid": valid_dataset,
+		}
+	)
+	print(raw_datasets)
+	for key in raw_datasets["train"][0]:
+		print(f"{key.upper()}: {raw_datasets['train'][0][key][:200]}")
 
 	# Set up a context length as well as load a pretrained (GPT-2)
 	# tokenizer.
@@ -54,7 +65,8 @@ def main():
 	# GPT2Tokenizer will have 'overflow_to_sample_mapping' as a key in
 	# the outputs.
 	outputs = tokenizer(
-		training_data[:2],
+		# training_data[:2],
+		raw_datasets["train"][:2]["contents"],
 		truncation=True,
 		max_length=context_length,
 		return_overflowing_tokens=True,
@@ -64,14 +76,14 @@ def main():
 	print(f"Input chunk lengths: {outputs['length']}")
 	print(f"Chunk mapping: {outputs['overflow_to_sample_mapping']}")
 
-
 	# Map the tokenize() function to all elements in the raw datasets
 	# (train and valid). This will tokenize all the texts in the
 	# 'contents' column and remove all other data, leaving only the
 	# tokenized 'input_ids' of the texts.
 	def tokenize(element):
 		outputs = tokenizer(
-			element,
+			# element,
+			element["contents"],
 			truncation=True,
 			max_length=context_length,
 			return_overflowing_tokens=True,
@@ -81,14 +93,59 @@ def main():
 		for length, input_ids in zip(outputs["length"], outputs["input_ids"]):
 			if length == context_length:
 				input_batch.append(input_ids)
-		# return {"input_ids": input_batch}
+		return {"input_ids": input_batch}
 
+		'''
 		# Map input_ids and output_ids.
 		input_ids = input_batch[:-1]
 		label_ids = input_batch[1:]
 		return {"input_ids": input_ids, "label_ids": label_ids}
+		'''
 
 
+	tokenized_datasets = raw_datasets.map(
+		tokenize, 
+		batched=True, 
+		remove_columns=raw_datasets["train"].column_names
+	)
+	print(tokenized_datasets)
+
+	# Initialize data collator to handle batch creation (as well as
+	# creating the language model labels). Given that the current
+	# data collator can also do masked language modeling (mlm) as well
+	# as causal language modeling (clm). 
+	tokenizer.pad_token = tokenizer.eos_token
+	data_collator = DataCollatorForLanguageModeling(
+		tokenizer, mlm=False, return_tensors="tf"
+	)
+
+	# An example of the output from the data collator.
+	out = data_collator(
+		[tokenized_datasets["train"][i] for i in range(5)]
+	)
+	for key in out:
+		print(f"{key} shape: {out[key].shape}")
+	print(tokenized_datasets["train"].column_names)
+
+	tf_ds = tokenized_datasets["train"].to_df_dataset(
+		collator_fn=data_collator
+	)
+
+	# Load pretrained (GPT-2) model.
+	config = GPT2Config.from_pretrained(
+		pretrained,
+		cache_dir=cache_dir,
+		vocab_size=len(tokenizer),
+		n_ctx=context_length,
+		bos_token_id=tokenizer.bos_token_id,
+		eos_token_id=tokenizer.eos_token_id,
+	)
+	model = TFGPT2LMHeadModel(config)
+
+
+	exit()
+
+	'''
 	# tokenized_training_data = tokenize(training_data)
 	# tokenized_validation_data = tokenize(validation_data)
 	train_dataset = tf.data.Dataset.from_tensor_slices(
@@ -99,6 +156,8 @@ def main():
 	)
 	print(list(train_dataset.as_numpy_iterator())[0])
 	print(train_dataset)
+	'''
+
 
 	# Load pretrained (GPT-2) model.
 	config = GPT2Config.from_pretrained(
