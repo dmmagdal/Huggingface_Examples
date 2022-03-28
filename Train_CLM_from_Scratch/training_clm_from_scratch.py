@@ -102,7 +102,7 @@ def main():
 		"huggingface-course/codeparrot-ds-train", split="train"
 	)
 	ds_valid = load_dataset(
-		"huggingface-course/codeparrot-ds-valid", split="train"
+		"huggingface-course/codeparrot-ds-valid", split="validation" #split="train"
 	)
 
 	raw_datasets = DatasetDict(
