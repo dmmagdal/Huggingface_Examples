@@ -13,15 +13,12 @@
 
 
 import os
-import tensorflow as tf
-from tensorflow import keras
 from datasets import Dataset, DatasetDict
 from transformers import DataCollatorForLanguageModeling
 from transformers import GPT2Tokenizer, AutoTokenizer, GPT2Config
 from transformers import GPT2LMHeadModel
-from transformers import AdamW, get_linear_schedule_with_warmup
-from transformers import pipeline
 from transformers import Trainer, TrainingArguments
+from transformers import pipeline
 
 
 def main():
@@ -56,7 +53,7 @@ def main():
 	# tokenizer.
 	context_length = 256
 	pretrained = "gpt2-medium"
-	cache_dir = "./gpt-medium-pretrained"
+	cache_dir = "./gpt2-medium-pretrained"
 	custom_tokens = ["<|title|>", "<|tags|>", "<|story|>"]
 	tokenizer = AutoTokenizer.from_pretrained(
 		pretrained, 
