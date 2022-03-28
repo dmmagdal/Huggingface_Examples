@@ -49,7 +49,7 @@ def main():
 	# tokenizer.
 	context_length = 256
 	pretrained = "gpt2-medium"
-	cache_dir = "./gpt-medium-pretrained"
+	cache_dir = "./gpt2-medium-pretrained"
 	custom_tokens = ["<|title|>", "<|tags|>", "<|story|>"]
 	tokenizer = AutoTokenizer.from_pretrained(
 		pretrained, 
@@ -127,9 +127,10 @@ def main():
 		print(f"{key} shape: {out[key].shape}")
 	print(tokenized_datasets["train"].column_names)
 
-	tf_ds = tokenized_datasets["train"].to_df_dataset(
-		collator_fn=data_collator
-	)
+	# tf_ds = tokenized_datasets["train"].to_df_dataset(
+	# 	collator_fn=data_collator
+	# )
+	print(train_dataset.to_df_dataset())
 
 	# Load pretrained (GPT-2) model.
 	config = GPT2Config.from_pretrained(
