@@ -1,5 +1,6 @@
 # finetune_gpt2_alt.py
 # Finetune a GPT model from Huggingface.
+# Source (HF CLM training): https://huggingface.co/course/chapter7/6
 # Source (HF GPT2): https://huggingface.co/docs/transformers/model_
 # doc/gpt2
 # Source (Datasets): https://huggingface.co/docs/datasets/package_
@@ -8,7 +9,17 @@
 # classes/tokenizer
 # Source (Trainer): https://huggingface.co/docs/transformers/main_
 # classes/trainer
+# Source (Data Collator): https://huggingface.co/docs/transformers/
+# main_classes/data_collator
+# Source (Docker): https://hub.docker.com/u/huggingface
+# Source (Relevant HR Forum): https://discuss.huggingface.co/t/fine-
+# tuning-gpt2-for-text-generation-with-tensorflow/15348
 # Windows/MacOS/Linux
+# Source (HF Custom Datasets): https://huggingface.co/transformers/
+# v3.2.0/custom_datasets.html.
+# Source (Colab GPT-2 Training): https://colab.research.google.com/
+# github/philschmid/fine-tune-GPT-2/blob/master/Fine_tune_a_non_
+# English_GPT_2_Model_with_Huggingface.ipynb
 # Python 3.7
 
 
