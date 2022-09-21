@@ -15,5 +15,9 @@ Status: Complete (Validating)
 Status: Complete (Validated)
 
 
+### Text2image with Stable Diffusion
+Status: WIP
+
+
 Additional Sources:
  - [Huggingface Transformers course](https://huggingface.co/course/chapter1/1)
