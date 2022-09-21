@@ -19,24 +19,9 @@ import os
 import torch
 from torch import autocast
 from diffusers import StableDiffusionPipeline
-# from huggingface_hub import notebook_login
 
 
 def main():
-	# Enable GPU access and external widgets if running code in Colab
-	# notebook.
-	#from google.colab import output
-	#output.enable_custom_widget_manager()
-
-	# Required modules (from medium article)
-	# diffusers==0.2.4 Changed to 0.3.0 from Nick's repo
-	# ftfy
-	# ipywidgets>=7,<8
-	# pillow
-	# scipy
-	# torch
-	# transformers
-
 	# Load huggingface hub user access token (required to download
 	# model).
 	if os.path.exists(".env") and os.path.isfile(".env"):
@@ -52,9 +37,6 @@ def main():
 	if not torch.cuda.is_available():
 		print("PyTorch does not detect cuda device. Shutting down.")
 		exit(0)
-
-	# Log into huggingface with user token.
-	# notebook_login()
 
 	# Verify contents of saved model (local location). This is done by
 	# computing the size of the folder. Note that the saved model is
@@ -95,9 +77,6 @@ def main():
 			torch_dtype=torch.float16,
 			use_auth_token=token, # pass token in to use it.
 		)
-		# pipe = StableDiffusionPipeline.from_pretrained(
-		# 	"./stable-diffusion-v1-4"
-		# )
 
 		# Save a local copy of the model. Model is automatically cached to 
 		# '~/.cache/huggingface/diffusers/models--CompVis--stable-diffusion
@@ -115,7 +94,6 @@ def main():
 	# results) that should help get more consistent results.
 	prompt = "A fighterjet flying over the desert"
 	save = "diff1.png"
-
 	with autocast("cuda"):
 		image = pipe(prompt)["sample"][0]
 

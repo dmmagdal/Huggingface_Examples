@@ -16,7 +16,7 @@ Status: Complete (Validated)
 
 
 ### Text2image with Stable Diffusion
-Status: WIP
+Status: Complete (Validated)
 
 
 Additional Sources:
