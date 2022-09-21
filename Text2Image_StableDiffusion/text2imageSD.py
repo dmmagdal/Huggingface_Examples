@@ -46,20 +46,64 @@ def main():
 		print("Missing .env file with Huggingface Hub user access token.")
 		exit(0)
 
+	# Torch cuda is required to run the stable diffusion model. Will
+	# investigate alternative implementations or repos to run the model
+	# on cpu.
+	if not torch.cuda.is_available():
+		print("PyTorch does not detect cuda device. Shutting down.")
+		exit(0)
+
 	# Log into huggingface with user token.
 	# notebook_login()
 
-	# Initialize stable diffusion pipeline. This uses the V1.4 model
-	# weights.
-	pipe = StableDiffusionPipeline.from_pretrained(
-		"CompVis/stable-diffusion-v1-4", 
-		revision="fp16",
-		torch_dtype=torch.float16,
-		use_auth_token=token, # pass token in to use it.
-	)
-	# pipe = StableDiffusionPipeline.from_pretrained(
-	# 	"./stable-diffusion-v1-4"
-	# )
+	# Verify contents of saved model (local location). This is done by
+	# computing the size of the folder. Note that the saved model is
+	# about 2.5GB. Would also be valid to compute the hash of the
+	# folder as well.
+	saved_model = "./stable-diffusion-v1-4"
+	load_saved = False
+	if os.path.exists(saved_model) and os.path.isdir(saved_model):
+		# Calculate size of saved model folder. See reference:
+		# https://www.geeksforgeeks.org/how-to-get-size-of-folder-
+		# using-python/
+		size = 0
+		for path, dirs, files in os.walk(saved_model):
+			for f in files:
+				# Get size of file in path.
+				fp = os.path.join(path, f)
+				size += os.path.getsize(fp)
+
+		# print(f"Folder size: {size}")
+		if size != 0:
+			load_saved = True
+			print(f"{saved_model} validated as non-empty.")
+		else:
+			print(f"{saved_model} is empty.")
+
+	if load_saved:
+		pipe = StableDiffusionPipeline.from_pretrained(
+			saved_model,
+			revision="fp16",
+			torch_dtype=torch.float16,
+		)
+	else:
+		# Initialize stable diffusion pipeline. This uses the V1.4 model
+		# weights.
+		pipe = StableDiffusionPipeline.from_pretrained(
+			"CompVis/stable-diffusion-v1-4", 
+			revision="fp16",
+			torch_dtype=torch.float16,
+			use_auth_token=token, # pass token in to use it.
+		)
+		# pipe = StableDiffusionPipeline.from_pretrained(
+		# 	"./stable-diffusion-v1-4"
+		# )
+
+		# Save a local copy of the model. Model is automatically cached to 
+		# '~/.cache/huggingface/diffusers/models--CompVis--stable-diffusion
+		# -v1-4' but since that cache may be cleared from time to time, it
+		# is a good idea to keep a copy of the model here in the directory.
+		pipe.save_pretrained(saved_model)
 
 	# Move pipeline to GPU.
 	pipe = pipe.to("cuda")
@@ -75,7 +119,11 @@ def main():
 	with autocast("cuda"):
 		image = pipe(prompt)["sample"][0]
 
+	# Save image.
 	image.save(save)
+
+	# Exit the program.
+	exit(0)
 
 
 if __name__ == '__main__':

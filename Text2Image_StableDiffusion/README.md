@@ -9,6 +9,7 @@ Description: Leverage the text to image model stable diffusion model for generat
  - The `ipywidgets>=7,<8` library is only required if running this code in a Google Colab environment (this allows for images to be displayed within the notebook).
  - Create a `.env` file containing your Huggingface Hub user access token. This token is required to download the stable diffusion model. You must also agree to the huggingface terms of service associated with downloading the model. If there is a permission error the first time running this, visit the help link provided in the message.
 
+
 ### Notes:
 
  - A docker image is able to be created with the `Dockerfile` however there still needs to be some work done on how to run that image on CPU (currently only can run the model on GPU/"cuda").
@@ -22,6 +23,7 @@ Description: Leverage the text to image model stable diffusion model for generat
  		output.enable_custom_widget_manager()
  		```
  - Run inference with Pytorch's autocast module. There is some variability to be expected in results, however there are also a number of parameters that can be tweaked such as `guidance_scale`, `number_of_steps`, and setting random seed (for deterministic results) that should help get more consistent results.
+ - On Windows, you will have to either run the program as administrator or enable developer mode. I would recommend just running the program as administrator for more better overall security than enabling developer mode. Enable developer mode at your own risk. For more information, see the following [Microsoft page](https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development).
 
 
 ### Resources:
@@ -33,3 +35,4 @@ Description: Leverage the text to image model stable diffusion model for generat
  - [YouTube video](https://www.youtube.com/watch?v=7xc0Fs3fpCg) linked to the above GitHub example
  - Huggingface Diffusers [GitHub repo](https://github.com/huggingface/diffusers/tree/main/src/diffusers/pipelines)
  - Huggingface hub [integration page](https://huggingface.co/docs/hub/models-adding-libraries)
+ - [Huggingface blog](https://huggingface.co/blog/stable_diffusion) on Stable Diffusion
