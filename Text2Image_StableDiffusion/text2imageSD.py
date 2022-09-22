@@ -34,9 +34,11 @@ def main():
 	# Torch cuda is required to run the stable diffusion model. Will
 	# investigate alternative implementations or repos to run the model
 	# on cpu.
-	if not torch.cuda.is_available():
-		print("PyTorch does not detect cuda device. Shutting down.")
-		exit(0)
+	cuda_device_available = torch.cuda.is_available()
+	if cuda_device_available:
+		print("PyTorch detects cuda device.")
+	else:
+		print("PyTorch does not detect cuda device.")
 
 	# Verify contents of saved model (local location). This is done by
 	# computing the size of the folder. Note that the saved model is
@@ -63,20 +65,29 @@ def main():
 			print(f"{saved_model} is empty.")
 
 	if load_saved:
-		pipe = StableDiffusionPipeline.from_pretrained(
-			saved_model,
-			revision="fp16",
-			torch_dtype=torch.float16,
-		)
+		if cuda_device_available:
+			pipe = StableDiffusionPipeline.from_pretrained(
+				saved_model,
+				revision="fp16",
+				torch_dtype=torch.float16,
+			)
+		else:
+			pipe = StableDiffusionPipeline.from_pretrained(saved_model)
 	else:
-		# Initialize stable diffusion pipeline. This uses the V1.4 model
-		# weights.
-		pipe = StableDiffusionPipeline.from_pretrained(
-			"CompVis/stable-diffusion-v1-4", 
-			revision="fp16",
-			torch_dtype=torch.float16,
-			use_auth_token=token, # pass token in to use it.
-		)
+		# Initialize stable diffusion pipeline. This uses the V1.4
+		# model weights.
+		if cuda_device_available:
+			pipe = StableDiffusionPipeline.from_pretrained(
+				"CompVis/stable-diffusion-v1-4", 
+				revision="fp16",
+				torch_dtype=torch.float16,
+				use_auth_token=token, # pass token in to use it.
+			)
+		else:
+			pipe = StableDiffusionPipeline.from_pretrained(
+				"CompVis/stable-diffusion-v1-4", 
+				use_auth_token=token, # pass token in to use it.
+			)
 
 		# Save a local copy of the model. Model is automatically cached to 
 		# '~/.cache/huggingface/diffusers/models--CompVis--stable-diffusion
@@ -84,8 +95,9 @@ def main():
 		# is a good idea to keep a copy of the model here in the directory.
 		pipe.save_pretrained(saved_model)
 
-	# Move pipeline to GPU.
-	pipe = pipe.to("cuda")
+	if cuda_device_available:
+		# Move pipeline to GPU.
+		pipe = pipe.to("cuda")
 
 	# Run inference with Pytorch's autocast module. There is some
 	# variability to be expected in results, however there are also a
@@ -94,7 +106,10 @@ def main():
 	# results) that should help get more consistent results.
 	prompt = "A fighterjet flying over the desert"
 	save = "diff1.png"
-	with autocast("cuda"):
+	if cuda_device_available:
+		with autocast("cuda"):
+			image = pipe(prompt)["sample"][0]
+	else:
 		image = pipe(prompt)["sample"][0]
 
 	# Save image.
