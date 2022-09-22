@@ -31,6 +31,12 @@ Description: Leverage the text to image model stable diffusion model for generat
     - Again, default revision/dtype is float32.
     - The conversion to fp16 is for (consumer) GPUs which don't have as much VRAM as regular RAM.
  - On Windows, you will have to either run the program as administrator or enable developer mode. I would recommend just running the program as administrator for more better overall security than enabling developer mode. Enable developer mode at your own risk. For more information, see the following [Microsoft page](https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development).
+ - Pipeline call arguments ([source](https://github.com/huggingface/diffusers/blob/ab7a78e8f11eec914653e01ee497d57d7503bd9d/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion.py)):
+   - `prompt`: str or List[str], the prompt(s) to guide the image generator.
+   - `height`: Optional[int], the height (in pixels) of the generated image. Default = 512.
+   - `width`: Optional[int], the width (in pixels) of the generated image. Default = 512.
+   - `num_inference_steps`: Optional[int], the number of denoising steps. More denoising steps usually lead to higher quality image at the expense of slower inference. Default is 50.
+   - `guidance_scale`: Optional[float], guidance scale as defined in [Classifier-Free Diffusion Guidance](https://arxiv.org/abs/2207.12598). `guidance_scale` is defined as `w` of equation 2. of [Imagen Paper](https://arxiv.org/pdf/2205.11487.pdf). Guidance scale is enabled by setting `guidance_scale > 1`. Higher guidance scale encourages to generate images that are closely linked to the text `prompt`, usually at the expense of lower image quality. Default is 7.5
 
 
 ### Resources:
