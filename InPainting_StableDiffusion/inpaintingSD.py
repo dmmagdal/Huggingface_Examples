@@ -1,4 +1,4 @@
-# image2imageSD.py
+# inpaintingSD.py
 # Use the Stable Diffusion model from StabilityAI (download from
 # HuggingFace) to perform image to image with text guided generation.
 # Source (Medium): https://towardsdatascience.com/how-to-generate-
@@ -19,7 +19,7 @@ import os
 from PIL import Image
 import torch
 from torch import autocast
-from diffusers import StableDiffusionImg2ImgPipeline
+from diffusers import StableDiffusionInpaintPipeline
 
 
 def main():
@@ -65,31 +65,27 @@ def main():
 		else:
 			print(f"{saved_model} is empty.")
 
-	# Currently unable to run on 2060 SUPER (8GB) GPU. Remove if using
-	# larger GPU device (Recommend having at least 12-16GB GPU device).
-	cuda_device_available = False
-
 	if load_saved:
 		if cuda_device_available:
-			pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+			pipe = StableDiffusionInpaintPipeline.from_pretrained(
 				saved_model,
 				revision="fp16",
 				torch_dtype=torch.float16,
 			)
 		else:
-			pipe = StableDiffusionImg2ImgPipeline.from_pretrained(saved_model)
+			pipe = StableDiffusionInpaintPipeline.from_pretrained(saved_model)
 	else:
 		# Initialize stable diffusion pipeline. This uses the V1.4
 		# model weights.
 		if cuda_device_available:
-			pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+			pipe = StableDiffusionInpaintPipeline.from_pretrained(
 				"CompVis/stable-diffusion-v1-4", 
 				revision="fp16",
 				torch_dtype=torch.float16,
 				use_auth_token=token, # pass token in to use it.
 			)
 		else:
-			pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+			pipe = StableDiffusionInpaintPipeline.from_pretrained(
 				"CompVis/stable-diffusion-v1-4", 
 				use_auth_token=token, # pass token in to use it.
 			)
@@ -104,26 +100,28 @@ def main():
 		# Move pipeline to GPU.
 		pipe = pipe.to("cuda")
 
-	init_image = Image.open("sketch-mountains-input.jpg")
-	init_image.resize((768, 512))
+	init_image = Image.open("overture-creations-5sI6fQgYIuo.png")
+	init_image = init_image.resize((512, 512))
+	mask_image = Image.open("overture-creations-5sI6fQgYIuo_mask.png")
+	mask_image = mask_image.resize((512, 512))
 
 	# Run inference with Pytorch's autocast module. There is some
 	# variability to be expected in results, however there are also a
 	# number of parameters that can be tweaked such as guidance_scale,
 	# number_of_steps, and setting random seed (for deterministic
 	# results) that should help get more consistent results.
-	prompt = "A fantasy landscape, trending on artstation"
-	save = "fantasy_landscape.png"
+	prompt = "a cat sitting on a bench"
+	save = "cat_on_bench.png"
 	if cuda_device_available:
 		with autocast("cuda"):
 			image = pipe(
-				prompt=prompt, init_image=init_image, strength=0.75,
-				guidance_scale=7.5
+				prompt=prompt, init_image=init_image, 
+				mask_image=mask_image, strength=0.75
 			)["images"][0]
 	else:
 		image = pipe(
-				prompt=prompt, init_image=init_image, strength=0.75,
-				guidance_scale=7.5
+				prompt=prompt, init_image=init_image, 
+				mask_image=mask_image, strength=0.75
 			)["images"][0]
 
 	# Save image.
