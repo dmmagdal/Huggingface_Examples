@@ -1,0 +1,212 @@
+# text2imageMiscSD.py
+# Use the miscellaneous stable diffusion models finetuned in
+# different styles to create images from text.
+# Windows/MacOS/Linux
+# Python 3.7
+
+
+import gc
+import os
+import torch
+from torch import autocast
+from diffusers import StableDiffusionPipeline
+
+
+def main():
+	# Load huggingface hub user access token (required to download
+	# model).
+	if os.path.exists(".env") and os.path.isfile(".env"):
+		with open(".env", "r") as f:
+			token = f.read().strip("\n")
+	else:
+		print("Missing .env file with Huggingface Hub user access token.")
+		exit(0)
+
+	# Torch cuda is required to run the stable diffusion model. Will
+	# investigate alternative implementations or repos to run the model
+	# on cpu.
+	cuda_device_available = torch.cuda.is_available()
+	if cuda_device_available:
+		print("PyTorch detects cuda device.")
+	else:
+		print("PyTorch does not detect cuda device.")
+
+	# A collection of models to try. Each key is the model name on
+	# huggingface hub and the value is a list containing the following:
+	# the local save name for the model, the test input prompt, the
+	# output save file name, and whether the model has a floating point
+	# 16 revision available. Note that having a floating point 16
+	# revision for the model does NOT disqualify it from being loading
+	# torch.float16. Loading the models in torch.float32 (default) is
+	# too large to load on 8GB 2060 SUPER GPU and should be run on CPU.
+	saved_models = {
+		"dallinmackay/Tron-Legacy-diffusion": [
+			"tron-legacy-diffusion", 
+			"city landscape in the style of trnlgcy",
+			"tron-landscape.png",
+			False
+		],
+		"nousr/robo-diffusion": [
+			"robo-diffusion",
+			"portrait of nousr robot photorealistic, trending on artstation",
+			"robo-portrait.png",
+			False
+		],
+		"nitrosocke/classic-anim-diffusion": [
+			"classic-anim-diffusion",
+			"classic disney style magical princess with golden hair",
+			"classic-disney-princess.png",
+			False
+		],
+		"nitrosocke/archer-diffusion": [
+			"archer-diffusion",
+			"a magical princess with golden hair, archer style",
+			"archer-princess.png",
+			False
+		],
+		"nitrosocke/spider-verse-diffusion": [
+			"spider-verse-diffusion",
+			"a magical princess with golden hair, spiderverse style",
+			"spiderverse-princess.png",
+			False
+		],
+		"nitrosocke/elden-ring-diffusion": [
+			"elden-ring-diffusion",
+			"a magical princess with golden hair, elden ring style",
+			"elden-ring-princess.png",
+			False
+		],
+		"nitrosocke/mo-di-diffusion": [
+			"mo-di-diffusion",
+			"a magical princess with golden hair, modern disney style",
+			"modern-disney-princess.png",
+			False
+		],
+		"nitrosocke/Arcane-Diffusion": [
+			"arcane-diffusion",
+			"arcane style, a magical princess with golden hair",
+			"arcane-princess.png",
+			False
+		],
+		"lambdalabs/sd-pokemon-diffusers": [
+			"sd-pokemon-diffusers",
+			"Yoda",
+			"yoda-pokemon.png",
+			False
+		],
+		"hakurei/waifu-diffusion": [
+			"waifu-diffusion",
+			"1girl, aqua eyes, baseball cap, blonde hair, closed "+\
+				"mouth, earrings, green background, hat, hoop "+\
+				"earrings, jewelry, looking at viewer, shirt, short "+\
+				"hair, simple background, solo, upper body, yellow "+\
+				"shirt",
+			"blonde-girl-waifu.png",
+			True
+		],
+		"DGSpitzer/Cyberpunk-Anime-Diffusion": [
+			"cyberpunk-anime-diffusion",
+			"a beautiful perfect face girl in dgs illustration "+\
+				"style, Anime fine details portrait of school girl "+\
+				"in front of modern tokyo city landscape on the "+\
+				"background deep bokeh, anime masterpiece, 8k, "+\
+				"sharp high quality anime",
+			"cyberpunk-anime-girl.png",
+			True
+		]
+	}
+
+	# Iterate through each model and run a quick text to image demo
+	# with the associated prompt.
+	for model, args in saved_models.items():
+		# Unpack values for the model.
+		saved_model, prompt, output_path, fp16_rev = args
+		saved_model = "./" + saved_model
+		load_saved = False
+
+		# Verify contents of saved model (local location). This is done
+		# by computing the size of the folder. Note that each saved
+		# model is about 2.5GB. Would also be valid to compute the hash
+		# of the folder as well.
+		if os.path.exists(saved_model) and os.path.isdir(saved_model):
+			# Calculate size of saved model folder. See reference:
+			# https://www.geeksforgeeks.org/how-to-get-size-of-folder-
+			# using-python/
+			size = 0
+			for path, dirs, files in os.walk(saved_model):
+				for f in files:
+					# Get size of file in path.
+					fp = os.path.join(path, f)
+					size += os.path.getsize(fp)
+
+			# print(f"Folder size: {size}")
+			if size != 0:
+				load_saved = True
+				print(f"{saved_model} validated as non-empty.")
+			else:
+				load_saved = False
+				print(f"{saved_model} is empty.")
+
+		# Load the model, either from a local copy or a download a copy
+		# from huggingface hub.
+		if load_saved:
+			if cuda_device_available:
+				pipe = StableDiffusionPipeline.from_pretrained(
+					saved_model,
+					revision="fp16" if fp16_rev else None,
+					torch_dtype=torch.float16,
+				)
+			else:
+				pipe = StableDiffusionPipeline.from_pretrained(
+					saved_model
+				)
+		else:
+			# Initialize model on the stable diffusion pipeline.
+			if cuda_device_available:
+				pipe = StableDiffusionPipeline.from_pretrained(
+					model,
+					revision="fp16" if fp16_rev else None,
+					torch_dtype=torch.float16,
+					use_auth_token=token, # pass token in to use it.
+				)
+			else:
+				pipe = StableDiffusionPipeline.from_pretrained(
+					model, 
+					use_auth_token=token, # pass token in to use it.
+				)
+
+			# Save a local copy of the model. Model is automatically
+			# cached to '~/.cache/huggingface/diffusers/models--{model}'
+			# but since that cache may be cleared from time to time, it
+			# is a good idea to keep a copy of the model here in the
+			# directory.
+			pipe.save_pretrained(saved_model)
+
+		if cuda_device_available:
+			# Move pipeline to GPU.
+			pipe = pipe.to("cuda")
+
+		# Run inference with Pytorch's autocast module. There is some
+		# variability to be expected in results, however there are also a
+		# number of parameters that can be tweaked such as guidance_scale,
+		# number_of_steps, and setting random seed (for deterministic
+		# results) that should help get more consistent results.
+		if cuda_device_available:
+			with autocast("cuda"):
+				image = pipe(prompt)["sample"][0]
+		else:
+			image = pipe(prompt)["sample"][0]
+
+		# Save image.
+		image.save(output_path)
+
+		# Delete the pipeline instance and clear the memory.
+		del pipe
+		gc.collect()
+
+	# Exit the program.
+	exit(0)
+
+
+if __name__ == '__main__':
+	main()
