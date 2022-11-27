@@ -22,6 +22,12 @@ def main():
 		print("Missing .env file with Huggingface Hub user access token.")
 		exit(0)
 
+	# Save outputs folder for images.
+	output_dir = "./outputs"
+	if not os.path.exists(output_dir) or not os.path.isdir(output_dir):
+		print("Ouptuts directory does not exist. Creating it now...")
+		os.makedirs(output_dir)
+
 	# Torch cuda is required to run the stable diffusion model. Will
 	# investigate alternative implementations or repos to run the model
 	# on cpu.
@@ -113,6 +119,51 @@ def main():
 				"sharp high quality anime",
 			"cyberpunk-anime-girl.png",
 			True
+		],
+		"nitrosocke/redshift-diffusion": [
+			"redshift-diffusion",
+			"redshift style robert downey jr as ironman",
+			"redshift-ironman.png",
+			False
+		],
+		"nitrosocke/Ghibli-Diffusion": [
+			"ghibli-diffusion",
+			"ghibli style magical princess with golden hair",
+			"ghibli-princess.png",
+			False
+		],
+		"prompthero/openjourney": [
+			"midjourney-v4-diffusion",
+			"retro serie of different cars with different colors "+\
+				"and shapes, mdjrny-v4 style",
+			"midjourney-v4-cars.png",
+			False
+		],
+		"Aybeeceedee/knollingcase": [
+			"knollingcase-diffusion",
+			"(clockwork:1.2), knollingcase, labelled, overlays, "+\
+				"oled display, annotated, technical, knolling "+\
+				"diagram, technical drawing, display case, dramatic "+\
+				"lighting, glow, dof, reflections, refractions",
+			"knollingcase-clockwork.png",
+			False
+		],
+		"Linaqruf/anything-v3.0": [
+			"anything-v3-diffusion",
+			"1girl, white hair, golden eyes, beautiful eyes, "+\
+				"detail, flower meadow, cumulonimbus clouds, "+\
+				"lighting, detailed sky, garden",
+			"anything-v3-anime-girl.png",
+			False
+		],
+		"Envvi/Inkpunk-Diffusion": [
+			"inkpunk-diffusion",
+			"(nvinkpunk), portrait of a girl, perfect female face, "+\
+				"intricate, highly detailed, happy, digital "+\
+				"painting, intense colors, (colorful), (high "+\
+				"contrast colors), sharp focus, 8k, highly detailed",
+			"inkpunk-girl.png",
+			False
 		]
 	}
 
@@ -122,6 +173,7 @@ def main():
 		# Unpack values for the model.
 		saved_model, prompt, output_path, fp16_rev = args
 		saved_model = "./" + saved_model
+		output_path = os.path.join(output_dir, output_path)
 		load_saved = False
 
 		# Verify contents of saved model (local location). This is done
@@ -193,9 +245,9 @@ def main():
 		# results) that should help get more consistent results.
 		if cuda_device_available:
 			with autocast("cuda"):
-				image = pipe(prompt)["sample"][0]
+				image = pipe(prompt).images[0]
 		else:
-			image = pipe(prompt)["sample"][0]
+			image = pipe(prompt).images[0]
 
 		# Save image.
 		image.save(output_path)

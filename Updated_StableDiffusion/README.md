@@ -29,14 +29,6 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
 
 ### Resources:
 
- - Tron Legacy Diffusion [Huggingface Hub](https://huggingface.co/dallinmackay/Tron-Legacy-diffusion)
- - Robo Diffusion [Huggingface Hub](https://huggingface.co/nousr/robo-diffusion)
- - Classic Anim Diffusion [Huggingface Hub](https://huggingface.co/nitrosocke/classic-anim-diffusion)
- - Archer Diffusion [Huggingface Hub](https://huggingface.co/nitrosocke/archer-diffusion)
- - Spider-verse Diffusion [Huggingface Hub](https://huggingface.co/nitrosocke/spider-verse-diffusion)
- - Elden Ring Diffusion [Huggingface Hub](https://huggingface.co/nitrosocke/elden-ring-diffusion)
- - Mo(dern) Di(sney) Diffusion [Huggingface Hub](https://huggingface.co/nitrosocke/mo-di-diffusion)
- - Arcane Diffusion [Huggingface Hub](https://huggingface.co/nitrosocke/Arcane-Diffusion)
- - Pokemon Diffusion [Huggingface Hub](https://huggingface.co/lambdalabs/sd-pokemon-diffusers)
- - Waifu Diffusion [Huggingface Hub](https://huggingface.co/hakurei/waifu-diffusion)
- - Cyberpunk Anime Diffusion [Huggingface Hub](https://huggingface.co/DGSpitzer/Cyberpunk-Anime-Diffusion)
+ - Stable Diffusion (v1.4) [Huggingface Hub](https://huggingface.co/CompVis/stable-diffusion-v1-4)
+ - Stable Diffusion v1.5 [Huggingface Hub](https://huggingface.co/runwayml/stable-diffusion-v1-5)
+ - Stable Diffusion v2 [Huggingface Hub](https://huggingface.co/stabilityai/stable-diffusion-2)

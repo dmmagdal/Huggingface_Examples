@@ -14,6 +14,10 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
 
  - Refer to the following README.md Notes sections from previous Stable Diffusion examples for guidance on running Stable Diffusion (including text to image, image to image, and image inpainting): [Text2Image_StableDiffusion](https://github.com/dmmagdal/Huggingface_Examples/blob/main/WaifuDiffusion_StableDiffusion/README.md), [Image2Image_StableDiffusion](https://github.com/dmmagdal/Huggingface_Examples/blob/main/Image2Image_StableDiffusion/README.md), and [InPainting_StableDiffusion](https://github.com/dmmagdal/Huggingface_Examples/blob/main/InPainting_StableDiffusion/README.md) [WaifuDiffusion_StableDiffusion](https://github.com/dmmagdal/Huggingface_Examples/blob/main/WaifuDiffusion_StableDiffusion/README.md)
  - This example primarily deals with just text to image. However the [Finetuned Diffusion](https://huggingface.co/spaces/anzorq/finetuned_diffusion) model/demo shows that these models can be applied to image to image and inpainting applications.
+ - The following models, **Inkpunk Diffusion** and **Knollingcase Diffusion**, require the `diffusers` module to be version `0.9.0`. All other models are able to run on `diffusers==0.3.0` and above.
+ - With `diffusers==0.9.0`, there are additional stable diffusion pipeline arguments that enhance the experience of using these diffusion models (refer to [here](https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion#diffusers.StableDiffusionPipeline) for more information):
+    - `negative_prompt` allows for negative prompting input.
+    - `num_images_per_prompt` allows for a user to specify the number of images they want output at a time.
  - **Tron Legacy Diffusion**
     - Use the token "trnlgcy" in prompts to use the style. ie "\[person\] in the style of trnlgcy" | steps: 25, sampler: "Euler a", CFG scale: 7.5
     - based on the v1.5 Stable Diffusion model (v1.5 refering to [runwayml's model](https://huggingface.co/runwayml/stable-diffusion-v1-5))
@@ -59,6 +63,26 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
     - Use keywords "dgs" in prompt, with "illustrated style" to get even better results. For sampler, user "Euler a" for best results (DDIM kinda works too), CFG scale: 7.5, steps 20 should be fine
     - Can export the model to ONNX, MPS, and/or FLAX/JAX
     - [GitHub](https://github.com/HelixNGC7293/cyberpunk-anime-diffusion)
+ - **Redshift Diffusion**
+    - Use the tokens "redshift style" in prompts for effect
+    - Can export the model to ONNX, MPS, and/or FLAX/JAX
+    - This model was trained using the diffusers based dreambooth training by ShivamShrirao using prior-preservation loss and the train-text-encoder flag in 11,000 steps.
+ - **Ghibli Diffusion**
+    - Use the tokens "ghibli style" in prompts for effect
+    - Can export the model to ONNX, MPS, and/or FLAX/JAX
+    - This model was trained using the diffusers based dreambooth training by ShivamShrirao using prior-preservation loss and the train-text-encoder flag in 15,000 steps.
+ - **Open Journey Diffusion**
+    - Use the tokens "midjrny-v4 style" at the beginning of prompts for effect
+    - Can export the model to ONNX, MPS, and/or FLAX/JAX
+    - [Colab](https://colab.research.google.com/drive/1vkuxKKeSYNYI2OLZm8mR-WqcokQtSURM?usp=sharing)
+ - **Knollingcase Diffusion**
+    - Use the token "knollingcase" anywhere in the prompt for effect
+ - **Anything v3 Diffusion**
+    - THis model is intended to produce high-quality, highly detailed anime style with just a few prompts. Like any other anime-style Stable Diffusion models, it also supports danbooru tags to generate images
+    - Can export the model to ONNX, MPS, and/or FLAX/JAX
+ - **Inkpunk Diffusion**
+    - Use the token "nvinkpunk" in prompts for effect
+    - Vaguely inspired by Gorillaz, FLCL, and Yoji Shinkawa
 
 
 ### Resources:
@@ -74,3 +98,9 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
  - Pokemon Diffusion [Huggingface Hub](https://huggingface.co/lambdalabs/sd-pokemon-diffusers)
  - Waifu Diffusion [Huggingface Hub](https://huggingface.co/hakurei/waifu-diffusion)
  - Cyberpunk Anime Diffusion [Huggingface Hub](https://huggingface.co/DGSpitzer/Cyberpunk-Anime-Diffusion)
+ - Redshift Diffusion [Huggingface Hub](https://huggingface.co/nitrosocke/redshift-diffusion)
+ - Ghibli Diffusion [Huggingface Hub](https://huggingface.co/nitrosocke/Ghibli-Diffusion)
+ - Open Journey (aka Midjourney v4) Diffusion [Huggingface Hub](https://huggingface.co/prompthero/openjourney)
+ - Knollingcase Diffusion [Huggingface Hub](https://huggingface.co/Aybeeceedee/knollingcase)
+ - Anything v3 Diffusion [Huggingface Hub](https://huggingface.co/Linaqruf/anything-v3.0)
+ - Inkpunk Diffusion [Huggingface Hub](https://huggingface.co/Envvi/Inkpunk-Diffusion)
