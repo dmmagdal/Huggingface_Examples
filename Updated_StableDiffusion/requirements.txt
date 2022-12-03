@@ -4,4 +4,4 @@ numpy
 pillow
 scipy
 torch
-transformers>=4.17.0
+transformers>=4.17.0,>=4.24.0

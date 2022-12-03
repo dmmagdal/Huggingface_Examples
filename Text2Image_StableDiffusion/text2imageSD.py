@@ -39,6 +39,11 @@ def main():
 		print("PyTorch detects cuda device.")
 	else:
 		print("PyTorch does not detect cuda device.")
+	mps_device_available = torch.backends.mps.is_available()
+	if mps_device_available:
+		print("PyTorch detects mps device.")
+	else:
+		print("PyTorch does not detect mps device.")
 
 	# Verify contents of saved model (local location). This is done by
 	# computing the size of the folder. Note that the saved model is
@@ -65,7 +70,7 @@ def main():
 			print(f"{saved_model} is empty.")
 
 	if load_saved:
-		if cuda_device_available:
+		if cuda_device_available or mps_device_available:
 			pipe = StableDiffusionPipeline.from_pretrained(
 				saved_model,
 				revision="fp16",
@@ -76,7 +81,7 @@ def main():
 	else:
 		# Initialize stable diffusion pipeline. This uses the V1.4
 		# model weights.
-		if cuda_device_available:
+		if cuda_device_available or mps_device_available:
 			pipe = StableDiffusionPipeline.from_pretrained(
 				"CompVis/stable-diffusion-v1-4", 
 				revision="fp16",
@@ -98,6 +103,8 @@ def main():
 	if cuda_device_available:
 		# Move pipeline to GPU.
 		pipe = pipe.to("cuda")
+	elif mps_device_available:
+		pipe = pipe.to("mps")
 
 	# Run inference with Pytorch's autocast module. There is some
 	# variability to be expected in results, however there are also a
@@ -108,9 +115,9 @@ def main():
 	save = "diff1.png"
 	if cuda_device_available:
 		with autocast("cuda"):
-			image = pipe(prompt)["sample"][0]
+			image = pipe(prompt).images[0]
 	else:
-		image = pipe(prompt)["sample"][0]
+		image = pipe(prompt).images[0]
 
 	# Save image.
 	image.save(save)
