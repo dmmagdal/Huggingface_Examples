@@ -37,6 +37,7 @@ Description: Leverage image in-painting with stable diffusion model for generati
    - `strength` Optional[float], conceptually, indicates how much to transform the reference `init_image`. Must be between 0 and 1. `init_image` will be used as a starting point, adding more noise to it the larger the `strength`. The number of denoising steps depends on the amount of noise initially added. When `strength` is 1, added noise will be maximum and the denoising process will run for the full number of iterations specified in `num_inference_steps`. A value of 1, therefore, essentially ignores `init_image`. Default is 0.8.
    - `num_inference_steps`: Optional[int], the number of denoising steps. More denoising steps usually lead to higher quality image at the expense of slower inference. Default is 50.
    - `guidance_scale`: Optional[float], guidance scale as defined in [Classifier-Free Diffusion Guidance](https://arxiv.org/abs/2207.12598). `guidance_scale` is defined as `w` of equation 2. of [Imagen Paper](https://arxiv.org/pdf/2205.11487.pdf). Guidance scale is enabled by setting `guidance_scale > 1`. Higher guidance scale encourages to generate images that are closely linked to the text `prompt`, usually at the expense of lower image quality. Default is 7.5.
+   - Upon upgrading the `diffuers` module to `diffusers==0.9.0`, the model checkpoint for Stable Diffusion (v1.4) uses a legacy implementation of StableDiffusionInpaintPipeline (and its variations). This legacy implementation will be deprecated/removed in `diffusers>=1.0.0`
 
 
 ### Resources:
