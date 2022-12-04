@@ -36,6 +36,11 @@ def main():
 		print("PyTorch detects cuda device.")
 	else:
 		print("PyTorch does not detect cuda device.")
+	mps_device_available = torch.backends.mps.is_available()
+	if mps_device_available:
+		print("PyTorch detects mps device.")
+	else:
+		print("PyTorch does not detect mps device.")
 
 	# A collection of models to try. Each key is the model name on
 	# huggingface hub and the value is a list containing the following:
@@ -237,6 +242,8 @@ def main():
 		if cuda_device_available:
 			# Move pipeline to GPU.
 			pipe = pipe.to("cuda")
+		elif mps_device_available:
+			pipe = pipe.to("mps")
 
 		# Run inference with Pytorch's autocast module. There is some
 		# variability to be expected in results, however there are also a
