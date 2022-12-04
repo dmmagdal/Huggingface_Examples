@@ -40,6 +40,11 @@ def main():
 		print("PyTorch detects cuda device.")
 	else:
 		print("PyTorch does not detect cuda device.")
+	mps_device_available = torch.backends.mps.is_available()
+	if mps_device_available:
+		print("PyTorch detects mps device.")
+	else:
+		print("PyTorch does not detect mps device.")
 
 	# Verify contents of saved model (local location). This is done by
 	# computing the size of the folder. Note that the saved model is
@@ -103,6 +108,9 @@ def main():
 	if cuda_device_available:
 		# Move pipeline to GPU.
 		pipe = pipe.to("cuda")
+	elif mps_device_available:
+		pipe = pipe.to("mps")
+		pipe.enable_attention_slicing()
 
 	init_image = Image.open("sketch-mountains-input.jpg")
 	init_image.resize((768, 512))
@@ -119,12 +127,12 @@ def main():
 			image = pipe(
 				prompt=prompt, init_image=init_image, strength=0.75,
 				guidance_scale=7.5
-			)["images"][0]
+			).images[0]
 	else:
 		image = pipe(
 				prompt=prompt, init_image=init_image, strength=0.75,
 				guidance_scale=7.5
-			)["images"][0]
+			).images[0]
 
 	# Save image.
 	image.save(save)
