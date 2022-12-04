@@ -31,6 +31,11 @@ def main():
 		print("PyTorch detects cuda device.")
 	else:
 		print("PyTorch does not detect cuda device.")
+	mps_device_available = torch.backends.mps.is_available()
+	if mps_device_available:
+		print("PyTorch detects mps device.")
+	else:
+		print("PyTorch does not detect mps device.")
 
 	# A collection of models to try. Each key is the model name on
 	# huggingface hub and the value is a list containing the following:
@@ -127,6 +132,14 @@ def main():
 		if cuda_device_available:
 			# Move pipeline to GPU.
 			pipe = pipe.to("cuda")
+
+			if model == "stabilityai/stable-diffusion-2":
+				# Use this function after sending the pipeline to cuda
+				# (stable diffusion v2 only) to use less VRAM at the
+				# cost of speed (This is for low GPU RAM). 
+				pipe.enable_attention_slicing()
+		elif mps_device_available:
+			pipe = pipe.to("mps")
 
 			if model == "stabilityai/stable-diffusion-2":
 				# Use this function after sending the pipeline to cuda
