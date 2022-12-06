@@ -83,6 +83,14 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
  - **Inkpunk Diffusion**
     - Use the token "nvinkpunk" in prompts for effect
     - Vaguely inspired by Gorillaz, FLCL, and Yoji Shinkawa
+ - **IsoPixel Diffusion**
+    - Use the token "isopixel" in prompts for effect
+    - Stable Diffusion v2-768 model trained on to generate isometric pixel art
+    - Always use 768 x 768
+    - High step count on Euler_a gives best results
+    - Low CFG scale outputs great results
+    - Can use tools like Pixelator to achieve a better effect
+    - Is currently only supported with .ckpt version (which means it cannot run with the pipeline)
 
 
 ### Resources:
@@ -104,3 +112,4 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
  - Knollingcase Diffusion [Huggingface Hub](https://huggingface.co/Aybeeceedee/knollingcase)
  - Anything v3 Diffusion [Huggingface Hub](https://huggingface.co/Linaqruf/anything-v3.0)
  - Inkpunk Diffusion [Huggingface Hub](https://huggingface.co/Envvi/Inkpunk-Diffusion)
+ - Isopixel Diffusion [Huggingface Hub](https://huggingface.co/nerijs/isopixel-diffusion-v1)

@@ -169,7 +169,13 @@ def main():
 				"contrast colors), sharp focus, 8k, highly detailed",
 			"inkpunk-girl.png",
 			False
-		]
+		],
+		# "nerijs/isopixel-diffusion-v1": [ # finetuned from Stable Diffusion v2 
+		# 	"isopixel-diffusion",
+		# 	"isometric bedroom, isopixel style",
+		# 	"isopixel-bedroom.png",
+		# 	False
+		# ]
 	}
 
 	# Iterate through each model and run a quick text to image demo
