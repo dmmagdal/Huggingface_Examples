@@ -91,6 +91,10 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
     - Low CFG scale outputs great results
     - Can use tools like Pixelator to achieve a better effect
     - Is currently only supported with .ckpt version (which means it cannot run with the pipeline)
+ - **Robo Diffusion 2 (base)**
+    - Use the token "nousr robot" towards the beginning of the prompt for effect
+    - A dreambooth-method finetune of stable diffusion that will output cool looking robots when prompted
+    - Use negative prompts to achieve best result
 
 
 ### Resources:
@@ -113,3 +117,4 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
  - Anything v3 Diffusion [Huggingface Hub](https://huggingface.co/Linaqruf/anything-v3.0)
  - Inkpunk Diffusion [Huggingface Hub](https://huggingface.co/Envvi/Inkpunk-Diffusion)
  - Isopixel Diffusion [Huggingface Hub](https://huggingface.co/nerijs/isopixel-diffusion-v1)
+ - Robo Diffusion 2 [Huggingface Hub](https://huggingface.co/nousr/robo-diffusion-2-base)

@@ -176,13 +176,27 @@ def main():
 		# 	"isopixel-bedroom.png",
 		# 	False
 		# ]
+		"nousr/robo-diffusion-2-base": [ # finetuned from Stable Diffusion v2 
+			"robo-diffusion2",
+			"A realistic photograph of a 3d nousr robot in a modern "+\
+				"city. A glossy white and orange nousr robot.",
+			"robo-portrait-sd2.png",
+			False,
+			"black and white robot, picture frame, a children's "+\
+				"drawing in crayon. #Wholesale, Abstract Metal "+\
+				"Sculpture. i'm leaving a bad review."
+		],
 	}
 
 	# Iterate through each model and run a quick text to image demo
 	# with the associated prompt.
 	for model, args in saved_models.items():
 		# Unpack values for the model.
-		saved_model, prompt, output_path, fp16_rev = args
+		if len(args) == 4:
+			saved_model, prompt, output_path, fp16_rev = args
+			neg_prompt = None
+		else:
+			saved_model, prompt, output_path, fp16_rev, neg_prompt = args
 		saved_model = "./" + saved_model
 		output_path = os.path.join(output_dir, output_path)
 		load_saved = False
@@ -257,10 +271,19 @@ def main():
 		# number_of_steps, and setting random seed (for deterministic
 		# results) that should help get more consistent results.
 		if cuda_device_available:
-			with autocast("cuda"):
-				image = pipe(prompt).images[0]
+			if len(args) == 4:
+				with autocast("cuda"):
+					image = pipe(prompt).images[0]
+			else:
+				with autocast("cuda"):
+					image = pipe(
+						prompt, negative_prompt=neg_prompt
+					).images[0]
 		else:
-			image = pipe(prompt).images[0]
+			if len(args) == 4:
+				image = pipe(prompt).images[0]
+			else: 
+				image = pipe(prompt, negative_prompt=neg_prompt).images[0]
 
 		# Save image.
 		image.save(output_path)
