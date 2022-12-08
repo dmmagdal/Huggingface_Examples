@@ -32,3 +32,4 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
  - Stable Diffusion (v1.4) [Huggingface Hub](https://huggingface.co/CompVis/stable-diffusion-v1-4)
  - Stable Diffusion v1.5 [Huggingface Hub](https://huggingface.co/runwayml/stable-diffusion-v1-5)
  - Stable Diffusion v2 [Huggingface Hub](https://huggingface.co/stabilityai/stable-diffusion-2)
+ - Stable Diffusion v2.1 [Huggingface Hub](https://huggingface.co/stabilityai/stable-diffusion-2-1-base)

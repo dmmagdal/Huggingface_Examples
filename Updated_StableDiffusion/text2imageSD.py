@@ -60,6 +60,11 @@ def main():
 			"stable-diffusion-v2-0",
 			"stable-diffusionv2-output.png",
 			False
+		],
+		"stabilityai/stable-diffusion-2-1-base": [
+			"stable-diffusion-v2-1",
+			"stable-diffusionv2-1-output.png",
+			False
 		]
 	}
 
