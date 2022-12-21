@@ -18,6 +18,9 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
  - With `diffusers==0.9.0`, there are additional stable diffusion pipeline arguments that enhance the experience of using these diffusion models (refer to [here](https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion#diffusers.StableDiffusionPipeline) for more information):
     - `negative_prompt` allows for negative prompting input.
     - `num_images_per_prompt` allows for a user to specify the number of images they want output at a time.
+
+
+### Models
  - **Tron Legacy Diffusion**
     - Use the token "trnlgcy" in prompts to use the style. ie "\[person\] in the style of trnlgcy" | steps: 25, sampler: "Euler a", CFG scale: 7.5
     - based on the v1.5 Stable Diffusion model (v1.5 refering to [runwayml's model](https://huggingface.co/runwayml/stable-diffusion-v1-5))
@@ -95,9 +98,45 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
     - Use the token "nousr robot" towards the beginning of the prompt for effect
     - A dreambooth-method finetune of stable diffusion that will output cool looking robots when prompted
     - Use negative prompts to achieve best result
+ - **Dreamlike Diffusion 1.0**
+    - Use the same prompts as you would for SD 1.5. Add "dreamlikeart" if the artstyle is too weak.
+    - Non-square aspect ratios work better for some prompts. If you want a portrait photo, try using a 2:3 or a 9:16 aspect ratio. If you want a landscape photo, try using a 3:2 or a 16:9 aspect ratio.
+    - Use slightly higher resolution for better results: 640x640px, 512x768px, 768x512px, etc.
+    - Dreamlike Diffusion 1.0 is SD 1.5 fine tuned on high quality art, made by [dreamlike.art](https://dreamlike.art/).
 
 
-### Resources:
+### Embeddings
+ - There are different embeddings that exist thanks to the ability to fine-tune Stable Diffusion through a process called Textual Inversion. Textual inversion allows a user to train a tiny part of the network on their own pictures, and use the results when generating new ones. In this context, the embedding is the part of the neural network that is trained. These embeddings are usually a .pt or .bin file. For more information see [here](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Textual-Inversion).
+ - **Action Helper**
+    - Trained for 500 steps with a lr of 0.003 and 4 steps gradient accumulation.
+ - **Cinema Helper**
+    - Nice bokeh, grain, depth of field, soft lights, muted colors, and overall a great cinema vibe.
+    - Trained for 1000 steps on 5 steps gradient accumulation and a lr of 0.003 for the first half, then 0.001 for the second half.
+ - **Photo Helper**
+    - Photohelper is a Stable Diffusion 2.x embedding with the goal of generating photorealistic pictures with nice colors. Its training data consists of ~120 of @spaablauw (on Huggingface) photos, half of which are portraits.
+    - It works best if you play with the weight a bit, and add terms related to photography.
+ - **Vintage Helper**
+    - VintageHelper will make your Stable Diffusion 2.0/2.1 generations feel analog. It focuses on bokeh, colorgrading, depth of field, composition and adds grain and imperfection. It's been trained for 500 steps at a learning rate of 0.002, and the next 500 at a learning rate of 0.001; 15 steps gradient accumulation. All 104 training images were captioned with BLIP and corrected.
+    - Included is the .pt for both 600 and 1000 steps, the ones @spaablauw feels are best.
+ - **Knollingcase SD v2.0**
+    - The embeddings in this repository were trained for the 768px Stable Diffusion v2.0 model. The embeddings should work on any model that uses SD v2.0 as a base.
+    - Currently the kc32-v4-5000.pt & kc16-v4-5000.pt embeddings seem to perform the best.
+    - Knollingcase v1: The v1 embeddings were trained for 4000 iterations with a batch size of 2, a text dropout of 10%, & 16 vectors using Automatic1111's WebUI. A total of 69 training images with high quality captions were used.
+    - Knollingcase v2: The v2 embeddings were trained for 5000 iterations with a batch size of 4 and a text dropout of 10%, & 16 vectors using Automatic1111's WebUI. A total of 78 training images with high quality captions were used.
+    - Knollingcase v3: The v3 embeddings were trained for 4000-6250 iterations with a batch size of 4 and a text dropout of 10%, & 16 vectors using Automatic1111's WebUI. A total of 86 training images with high quality captions were used.
+    - Knollingcase v4: The v4 embeddings were trained for 4000-6250 iterations with a batch size of 4 and a text dropout of 10%, using Automatic1111's WebUI. A total of 116 training images with high quality captions were used.
+    - Usage:
+       - To use the embeddings, download and then rename the files to whatever trigger word you want to use. They were trained with kc8, kc16, kc32, but any trigger word should work.
+       - The knollingcase style is considered to be a concept inside a sleek (sometimes scifi) display case with transparent walls, and a minimalistic background.
+    - Suggested prompts:
+      - \<concept\>, micro-details, photorealism, photorealistic, \<kc-vx-iter\>, photorealistic, \<concept\>, very detailed, scifi case, \<kc-vx-iter\>, \<concept\>, very detailed, scifi transparent case, \<kc-vx-iter\>
+    - Suggested negative prompts:
+       - blurry, toy, cartoon, animated, underwater, photoshop
+    - Suggested samplers:
+       - DPM++ SDE Karras (used for the example images) or DPM++ 2S a Karras
+
+
+### Model Resources:
 
  - Tron Legacy Diffusion [Huggingface Hub](https://huggingface.co/dallinmackay/Tron-Legacy-diffusion)
  - Robo Diffusion [Huggingface Hub](https://huggingface.co/nousr/robo-diffusion)
@@ -118,3 +157,12 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
  - Inkpunk Diffusion [Huggingface Hub](https://huggingface.co/Envvi/Inkpunk-Diffusion)
  - Isopixel Diffusion [Huggingface Hub](https://huggingface.co/nerijs/isopixel-diffusion-v1)
  - Robo Diffusion 2 [Huggingface Hub](https://huggingface.co/nousr/robo-diffusion-2-base)
+ - Dreamlike Diffusion 1.0 [Huggingface Hub](https://huggingface.co/dreamlike-art/dreamlike-diffusion-1.0)
+
+
+### Embedding Resources:
+ - Action Helper [Huggingface Hub](https://huggingface.co/spaablauw/ActionHelper)
+ - Cinema Helper [Huggingface Hub](https://huggingface.co/spaablauw/CinemaHelper)
+ - Photo Helper [Huggingface Hub](https://huggingface.co/spaablauw/PhotoHelper)
+ - Vintage Helper [Huggingface Hub](https://huggingface.co/spaablauw/VintageHelper)
+ - Knollingcase Embeddings for Stable Diffusion v2.0 [Huggingface Hub](https://huggingface.co/ProGamerGov/knollingcase-embeddings-sd-v2-0)
