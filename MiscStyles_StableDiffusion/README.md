@@ -103,6 +103,9 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
     - Non-square aspect ratios work better for some prompts. If you want a portrait photo, try using a 2:3 or a 9:16 aspect ratio. If you want a landscape photo, try using a 3:2 or a 16:9 aspect ratio.
     - Use slightly higher resolution for better results: 640x640px, 512x768px, 768x512px, etc.
     - Dreamlike Diffusion 1.0 is SD 1.5 fine tuned on high quality art, made by [dreamlike.art](https://dreamlike.art/).
+ - **Waifu Diffusion v1.4**
+    - Based on Stable Diffusion v2.1
+    - Generally an update of the previously mentioned Waifu Diffusion model hosted by the same person of Huggingface Hub
 
 
 ### Embeddings
@@ -158,6 +161,7 @@ Description: Leverage various fine-tuned diffusion models for generating art fro
  - Isopixel Diffusion [Huggingface Hub](https://huggingface.co/nerijs/isopixel-diffusion-v1)
  - Robo Diffusion 2 [Huggingface Hub](https://huggingface.co/nousr/robo-diffusion-2-base)
  - Dreamlike Diffusion 1.0 [Huggingface Hub](https://huggingface.co/dreamlike-art/dreamlike-diffusion-1.0)
+ - Waifu Diffusion v1.4 [Huggingface Hub](https://huggingface.co/hakurei/waifu-diffusion-v1-4)
 
 
 ### Embedding Resources:

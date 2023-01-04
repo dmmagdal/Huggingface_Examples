@@ -199,6 +199,15 @@ def main():
 				"drawing in crayon. #Wholesale, Abstract Metal "+\
 				"Sculpture. i'm leaving a bad review."
 		],
+		# "hakurei/waifu-diffusion-v1-4": [ # finetuned from Stable Diffusion v2-1
+		# 	"waifu-diffusion-v1-4",
+		# 	"masterpiece, best quality, 1girl, green hair, sweater, "+\
+		# 		"looking at viewer, upper body, beanie, outdoors, "+\
+		# 		"watercolor, night, turtleneck",
+		# 	"waifu-diffusion-v1-4.png",
+		# 	False,
+		# 	""
+		# ]
 	}
 
 	# Iterate through each model and run a quick text to image demo
